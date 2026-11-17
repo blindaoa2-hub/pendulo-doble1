@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Obra Caótica | Duelo de péndulos dobles</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ CABECERA ============ -->
+<header class="cab">
+  <h1>Obra Caótica: duelo de péndulos dobles</h1>
+  <p><a class="volver" href="../simulador/index.html">← Volver al simulador</a></p>
+  <p>Derriba bloques con una bola de demolición colgada de una grúa. Una pequeña diferencia al soltarla cambia todo el recorrido.</p>
+</header>
+
+<main class="juego">
+
+  <!-- ============ ESCENA DE LA OBRA ============ -->
+  <section class="escena" aria-label="Escena del juego">
+    <div class="barra">
+      <div class="tarj" id="tarj-1"><span class="nom" id="nom-1">Jugador 1</span><b><span id="pts-1">0</span> pts</b></div>
+      <div class="centro"><span id="estado">Escribe los nombres y pulsa Comenzar.</span><span id="tiempo"></span></div>
+      <div class="tarj" id="tarj-2"><span class="nom" id="nom-2">Jugador 2</span><b><span id="pts-2">0</span> pts</b></div>
+    </div>
+
+    <div class="lienzo">
+      <canvas id="cv" width="900" height="560" aria-label="Obra en construcción con un péndulo doble y bloques"></canvas>
+      <div id="banner" class="banner" role="alert" hidden>
+        <div class="banner-palabra" id="banner-texto">¡GANASTE!</div>
+        <div class="banner-sub" id="banner-sub"></div>
+      </div>
+    </div>
+
+    <div class="controles">
+      <button type="button" id="btn-izq" disabled>← Empujar</button>
+      <button type="button" id="btn-der" disabled>Empujar →</button>
+      <span id="empujes" class="chip">Empujones: 0</span>
+      <button type="button" id="btn-siguiente" class="primario" hidden>Siguiente turno</button>
+    </div>
+  </section>
+
+  <!-- ============ PANEL LATERAL ============ -->
+  <aside class="lateral">
+    <div class="caja" id="config">
+      <h2>Jugadores</h2>
+      <label>Jugador 1 <input type="text" id="j-nombre1" maxlength="20" placeholder="Jugador 1"></label>
+      <label>Jugador 2 <input type="text" id="j-nombre2" maxlength="20" placeholder="Jugador 2"></label>
+      <button type="button" id="btn-comenzar" class="primario">Comenzar</button>
+    </div>
+
+    <div class="caja">
+      <h2>Cómo se juega</h2>
+      <ol>
+        <li><strong>Arrastra</strong> la bola con el mouse o el dedo para elegir dónde empieza.</li>
+        <li><strong>Suéltala</strong>: el péndulo se mueve solo durante 12 segundos.</li>
+        <li><strong>Empuja</strong> (hasta 3 veces) para cambiar su recorrido y derriba bloques.</li>
+      </ol>
+      <p class="nota">Cada jugador tiene 3 turnos. Bloque normal: 10 pts. Bloque dorado: 30 pts. Gana quien sume más puntos.</p>
+      <button type="button" id="btn-reiniciar">Reiniciar juego</button>
+    </div>
+
+    <div class="caja">
+      <h2>Datos fijos del modelo</h2>
+      <p class="nota">m₁ = m₂ = 1 kg · L₁ = L₂ = 1 m · g = 9,81 m/s² · sin rozamiento. Estos valores no cambian durante el juego.</p>
+      <p class="nota"><strong>¿Por qué es difícil?</strong> El péndulo doble es caótico: dos lanzamientos casi iguales terminan en trayectorias muy distintas.</p>
+    </div>
+  </aside>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

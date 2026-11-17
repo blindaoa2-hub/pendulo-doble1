@@ -1,0 +1,176 @@
+/* ===== Variables de diseño ===== */
+:root {
+  --tinta: #16222e;       /* texto y encabezados */
+  --papel: #eef2f3;       /* fondo de la página */
+  --panel: #ffffff;       /* fondo de paneles */
+  --linea: #cfd8dc;       /* bordes */
+  --lab: #0f7c8a;         /* acento principal (acciones) */
+  --pend-a: #f2a33a;      /* péndulo A: ámbar */
+  --pend-b: #e0527f;      /* péndulo B: magenta */
+  --lienzo: #101a23;      /* fondo de los canvas */
+  --suave: #5b6b76;       /* texto secundario */
+  --ok: #1d7a4a;
+  --alerta: #b3361f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  line-height: 1.45;
+}
+
+/* ===== Cabecera: orienta al estudiante ===== */
+.cabecera {
+  background: var(--tinta);
+  color: #fff;
+  padding: 1rem 1.5rem;
+}
+.cabecera h1 { margin: 0 0 .3rem; font-size: 1.6rem; }
+.cabecera p { margin: .2rem 0; max-width: 90ch; font-size: .95rem; }
+.cabecera .pregunta { color: #ffd58a; font-size: 1.05rem; }
+
+/* ===== Rejilla 3 columnas: Modificar | Observar | Analizar ===== */
+.rejilla {
+  display: grid;
+  grid-template-columns: 320px minmax(340px, 1fr) minmax(380px, 1.1fr);
+  gap: 1rem;
+  padding: 1rem;
+  align-items: start;
+}
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  padding: 1rem;
+}
+.panel h2 {
+  margin: 0 0 .8rem;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.paso {
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem; height: 1.6rem;
+  border-radius: 50%;
+  background: var(--lab);
+  color: #fff;
+  font-size: .9rem;
+}
+.panel h3 { margin: 1rem 0 .4rem; font-size: .95rem; color: var(--suave); }
+
+/* ===== Controles ===== */
+.grupo { border-top: 1px solid var(--linea); padding-top: .2rem; }
+.grupo:first-of-type { border-top: 0; }
+.ctl { display: block; font-size: .85rem; margin: .5rem 0; }
+.rango { color: var(--suave); font-size: .75rem; margin-left: .3rem; }
+.par { display: flex; gap: .5rem; align-items: center; margin-top: .15rem; }
+.par input[type="range"] { flex: 1; accent-color: var(--lab); }
+input[type="number"], select {
+  width: 5.5rem;
+  padding: .25rem .35rem;
+  border: 1px solid var(--linea);
+  border-radius: 4px;
+  font: inherit;
+}
+select { width: 100%; }
+.chk { display: block; font-size: .85rem; margin: .4rem 0; }
+
+button {
+  font: inherit;
+  font-size: .85rem;
+  padding: .45rem .7rem;
+  border: 1px solid var(--lab);
+  background: #fff;
+  color: var(--lab);
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover { background: #e3f2f4; }
+button.primario { background: var(--lab); color: #fff; }
+button.primario:hover { background: #0b6470; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 1px;
+}
+.fila-botones { display: flex; flex-wrap: wrap; gap: .4rem; }
+.acciones { margin-bottom: .8rem; }
+
+/* ===== Animación ===== */
+#cv-anim, .graficas canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--lienzo);
+  border-radius: 6px;
+}
+.leyenda { display: flex; gap: 1rem; font-size: .8rem; margin: .5rem 0; }
+.pt { display: inline-block; width: .8rem; height: .8rem; border-radius: 50%; margin-right: .3rem; }
+.p1 { background: var(--pend-a); }
+.p2 { background: var(--pend-b); }
+.mensaje {
+  padding: .6rem .8rem;
+  border-left: 5px solid var(--lab);
+  background: #e8f3f5;
+  font-weight: 600;
+  font-size: .9rem;
+}
+.mensaje.caos { border-color: var(--alerta); background: #fbe9e5; color: var(--alerta); }
+.mensaje.regular { border-color: var(--ok); background: #e6f4ec; color: var(--ok); }
+.nota { font-size: .78rem; color: var(--suave); }
+
+/* ===== Gráficas ===== */
+.graficas { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: .8rem; }
+.graficas figure { margin: 0; }
+.graficas figcaption { font-size: .78rem; font-weight: 600; margin-bottom: .2rem; }
+
+/* ===== Resultados ===== */
+.resultados { display: grid; grid-template-columns: 1fr 1fr; gap: .3rem .8rem; margin: 0; }
+.resultados div { display: flex; flex-direction: column; border-bottom: 1px solid var(--linea); padding: .2rem 0; }
+.resultados dt { font-size: .72rem; color: var(--suave); }
+.resultados dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; font-size: .88rem; }
+
+/* ===== Tablas ===== */
+.tabla-scroll { overflow-x: auto; margin-top: .5rem; }
+table { border-collapse: collapse; width: 100%; font-size: .78rem; }
+th, td { border: 1px solid var(--linea); padding: .3rem .4rem; text-align: left; }
+th { background: #e8eef0; }
+
+/* ===== Pie con el modelo ===== */
+.modelo { margin: 0 1rem 1.5rem; padding: 1rem; background: var(--panel); border: 1px solid var(--linea); border-radius: 8px; font-size: .88rem; }
+.modelo h2 { margin: 0 0 .4rem; font-size: 1.05rem; }
+
+/* ===== Adaptación a pantallas pequeñas ===== */
+@media (max-width: 1100px) {
+  .rejilla { grid-template-columns: 1fr 1fr; }
+  #panel-controles { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .rejilla { grid-template-columns: 1fr; }
+  .cabecera h1 { font-size: 1.3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ===== Enlace al juego ===== */
+.cabecera .enlace { margin: .5rem 0 0; }
+.cabecera .enlace a { color: #ffd58a; font-weight: 600; }
+
+/* ===== Fórmulas del modelo ===== */
+html { scroll-behavior: smooth; }
+.formulas { margin: 0 1rem 1rem; }
+.formulas code { background: #e8eef0; padding: .05rem .35rem; border-radius: 4px; font-size: .85em; }
+.f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1rem; margin: .8rem 0 1.2rem; }
+.f-card { border: 1px solid var(--linea); border-radius: 8px; padding: .8rem 1rem; background: #fbfdfd; min-width: 0; }
+.f-card h3 { margin: 0 0 .2rem; color: var(--lab); font-size: 1rem; }
+.donde { margin: 0 0 .6rem; font-size: .8rem; color: #5b6b76; }
+.formula { font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif; font-size: 1.05rem; line-height: 1.7; background: #eef4f6; border-left: 4px solid var(--lab); border-radius: 4px; padding: .4rem .7rem; margin: .4rem 0; overflow-x: auto; }
+@media (max-width: 720px) { .f-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

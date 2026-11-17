@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Péndulo doble y movimiento caótico | Simulador</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ A. IDENTIFICACIÓN Y ORIENTACIÓN ============ -->
+<header class="cabecera">
+  <h1>Péndulo doble y movimiento caótico</h1>
+  <p class="pregunta">¿Cómo influyen las condiciones iniciales, la longitud, la masa y la energía en el movimiento y comportamiento caótico de un péndulo doble?</p>
+  <p class="objetivo"><strong>Objetivo:</strong> comprender cómo las condiciones iniciales y los parámetros físicos modifican la dinámica del péndulo doble y pueden producir movimientos caóticos.</p>
+  <p class="enlace"><a href="../juego/index.html">Ir al juego: Obra Caótica →</a> &nbsp;·&nbsp; <a href="#formulas">Ver fórmulas ↓</a></p>
+  <p class="uso"><strong>Cómo usarlo:</strong> elige un caso o cambia las variables (izquierda), pulsa Iniciar y observa los dos péndulos (centro). Luego analiza las gráficas y los resultados (derecha).</p>
+</header>
+
+<main class="rejilla">
+
+  <!-- ============ 1. MODIFICAR: CONTROLES ============ -->
+  <section class="panel" id="panel-controles" aria-labelledby="t-mod">
+    <h2 id="t-mod"><span class="paso">1</span> Modificar</h2>
+
+    <div class="fila-botones acciones">
+      <button type="button" id="btn-iniciar" class="primario">Iniciar</button>
+      <button type="button" id="btn-pausar">Pausar</button>
+      <button type="button" id="btn-reiniciar">Reiniciar</button>
+      <button type="button" id="btn-borrar">Borrar rastro</button>
+    </div>
+    <div class="grupo">
+      <h3>Casos predefinidos</h3>
+      <div class="fila-botones">
+        <button type="button" data-preset="pequenas">Oscilaciones pequeñas</button>
+        <button type="button" data-preset="caotico">Movimiento caótico</button>
+        <button type="button" data-preset="invertido">Casi invertido</button>
+      </div>
+    </div>
+
+    <div class="grupo">
+      <h3>Masas y longitudes</h3>
+      <label class="ctl">Masa 1, m₁ (kg) <span class="rango">0,1 – 5,0</span>
+        <span class="par"><input type="range" id="r-m1" min="0.1" max="5" step="0.1" value="1"><input type="number" id="n-m1" min="0.1" max="5" step="0.1" value="1"></span></label>
+      <label class="ctl">Masa 2, m₂ (kg) <span class="rango">0,1 – 5,0</span>
+        <span class="par"><input type="range" id="r-m2" min="0.1" max="5" step="0.1" value="1"><input type="number" id="n-m2" min="0.1" max="5" step="0.1" value="1"></span></label>
+      <label class="ctl">Longitud 1, L₁ (m) <span class="rango">0,5 – 3,0</span>
+        <span class="par"><input type="range" id="r-L1" min="0.5" max="3" step="0.1" value="1"><input type="number" id="n-L1" min="0.5" max="3" step="0.1" value="1"></span></label>
+      <label class="ctl">Longitud 2, L₂ (m) <span class="rango">0,5 – 3,0</span>
+        <span class="par"><input type="range" id="r-L2" min="0.5" max="3" step="0.1" value="1"><input type="number" id="n-L2" min="0.5" max="3" step="0.1" value="1"></span></label>
+    </div>
+
+    <div class="grupo">
+      <h3>Condiciones iniciales</h3>
+      <label class="ctl">Ángulo 1, θ₁ (°) <span class="rango">−180 – 180</span>
+        <span class="par"><input type="range" id="r-th1" min="-180" max="180" step="1" value="120"><input type="number" id="n-th1" min="-180" max="180" step="1" value="120"></span></label>
+      <label class="ctl">Ángulo 2, θ₂ (°) <span class="rango">−180 – 180</span>
+        <span class="par"><input type="range" id="r-th2" min="-180" max="180" step="1" value="-10"><input type="number" id="n-th2" min="-180" max="180" step="1" value="-10"></span></label>
+      <label class="ctl">Velocidad angular 1, ω₁ (rad/s) <span class="rango">−10 – 10</span>
+        <span class="par"><input type="range" id="r-w1" min="-10" max="10" step="0.1" value="0"><input type="number" id="n-w1" min="-10" max="10" step="0.1" value="0"></span></label>
+      <label class="ctl">Velocidad angular 2, ω₂ (rad/s) <span class="rango">−10 – 10</span>
+        <span class="par"><input type="range" id="r-w2" min="-10" max="10" step="0.1" value="0"><input type="number" id="n-w2" min="-10" max="10" step="0.1" value="0"></span></label>
+    </div>
+
+    <div class="grupo">
+      <h3>Entorno</h3>
+      <label class="ctl">Cuerpo celeste
+        <select id="planeta">
+          <option value="9.81">Tierra (9,81 m/s²)</option>
+          <option value="1.62">Luna (1,62 m/s²)</option>
+          <option value="3.71">Marte (3,71 m/s²)</option>
+          <option value="24.79">Júpiter (24,79 m/s²)</option>
+          <option value="custom">Personalizado</option>
+        </select></label>
+      <label class="ctl">Gravedad, g (m/s²) <span class="rango">1 – 25</span>
+        <span class="par"><input type="range" id="r-g" min="1" max="25" step="0.01" value="9.81"><input type="number" id="n-g" min="1" max="25" step="0.01" value="9.81"></span></label>
+      <label class="chk"><input type="checkbox" id="chk-amort"> Activar amortiguamiento</label>
+      <label class="ctl">Coeficiente, b (1/s) <span class="rango">0 – 1,0</span>
+        <span class="par"><input type="range" id="r-b" min="0" max="1" step="0.01" value="0.1"><input type="number" id="n-b" min="0" max="1" step="0.01" value="0.1"></span></label>
+    </div>
+
+    <div class="grupo">
+      <h3>Comparación (sensibilidad)</h3>
+      <label class="chk"><input type="checkbox" id="chk-comparar" checked> Mostrar segundo péndulo</label>
+      <label class="ctl">Diferencia inicial, Δθ₁ (rad) <span class="rango">0,0001 – 0,1</span>
+        <span class="par"><input type="number" id="n-dth" min="0.0001" max="0.1" step="0.0001" value="0.001"></span></label>
+      <label class="chk"><input type="checkbox" id="chk-rastro" checked> Mostrar rastro</label>
+    </div>
+
+  </section>
+
+  <!-- ============ 2. OBSERVAR: ANIMACIÓN ============ -->
+  <section class="panel" id="panel-animacion" aria-labelledby="t-obs">
+    <h2 id="t-obs"><span class="paso">2</span> Observar</h2>
+    <canvas id="cv-anim" width="640" height="640" aria-label="Animación del péndulo doble"></canvas>
+    <div class="leyenda">
+      <span><i class="pt p1"></i> Péndulo A</span>
+      <span><i class="pt p2"></i> Péndulo B (Δθ₁ distinto)</span>
+    </div>
+    <div id="mensaje" class="mensaje" role="status">Pulsa Iniciar para comenzar la simulación.</div>
+    <p class="nota">Criterio: se considera que el movimiento es caótico cuando la distancia entre las masas 2 de ambos péndulos supera 0,5 m, a pesar de que partieron casi iguales.</p>
+  </section>
+
+  <!-- ============ 3. ANALIZAR: GRÁFICAS Y RESULTADOS ============ -->
+  <section class="panel" id="panel-analisis" aria-labelledby="t-ana">
+    <h2 id="t-ana"><span class="paso">3</span> Analizar</h2>
+
+    <div class="graficas">
+      <figure><figcaption>Ángulos θ vs. tiempo</figcaption><canvas id="cv-theta" width="360" height="180"></canvas></figure>
+      <figure><figcaption>Velocidad angular ω vs. tiempo</figcaption><canvas id="cv-omega" width="360" height="180"></canvas></figure>
+      <figure><figcaption>Energía vs. tiempo</figcaption><canvas id="cv-energia" width="360" height="180"></canvas></figure>
+      <figure><figcaption>Espacio de fases (θ₁, ω₁)</figcaption><canvas id="cv-fases" width="360" height="180"></canvas></figure>
+    </div>
+
+    <h3>Resultados en vivo (péndulo A)</h3>
+    <dl class="resultados">
+      <div><dt>Tiempo, t</dt><dd><span id="out-t">0.00</span> s</dd></div>
+      <div><dt>Posición masa 1</dt><dd>(<span id="out-x1">0.00</span>; <span id="out-y1">0.00</span>) m</dd></div>
+      <div><dt>Posición masa 2</dt><dd>(<span id="out-x2">0.00</span>; <span id="out-y2">0.00</span>) m</dd></div>
+      <div><dt>Velocidad masa 1 / 2</dt><dd><span id="out-v1">0.00</span> / <span id="out-v2">0.00</span> m/s</dd></div>
+      <div><dt>Aceleración masa 1 / 2</dt><dd><span id="out-a1">0.00</span> / <span id="out-a2">0.00</span> m/s²</dd></div>
+      <div><dt>ω₁ / ω₂</dt><dd><span id="out-w1">0.00</span> / <span id="out-w2">0.00</span> rad/s</dd></div>
+      <div><dt>Energía cinética, T</dt><dd><span id="out-T">0.00</span> J</dd></div>
+      <div><dt>Energía potencial, V</dt><dd><span id="out-V">0.00</span> J</dd></div>
+      <div><dt>Energía mecánica, E</dt><dd><span id="out-E">0.00</span> J</dd></div>
+      <div><dt>Deriva de energía</dt><dd><span id="out-deriva">0.0000</span> %</dd></div>
+      <div><dt>Separación A–B (masa 2)</dt><dd><span id="out-sep">0.000</span> m</dd></div>
+    </dl>
+
+    <h3>Registro de ensayos</h3>
+    <button type="button" id="btn-registrar">Registrar ensayo</button>
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>#</th><th>m₁,m₂ (kg)</th><th>L₁,L₂ (m)</th><th>θ₁,θ₂ (°)</th><th>g (m/s²)</th><th>Tiempo hasta divergir (s)</th></tr></thead>
+        <tbody id="tbody-ensayos"></tbody>
+      </table>
+    </div>
+
+    <h3>Validación científica</h3>
+    <button type="button" id="btn-validar">Ejecutar pruebas de validación</button>
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Prueba</th><th>Valor teórico</th><th>Valor simulado</th><th>Error (%)</th></tr></thead>
+        <tbody id="tbody-validacion"><tr><td colspan="4">Aún no se han ejecutado las pruebas.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FÓRMULAS UTILIZADAS EN EL SIMULADOR ============ -->
+<section class="panel formulas" id="formulas" aria-labelledby="t-formulas">
+  <h2 id="t-formulas"><span class="paso">ƒ</span> Fórmulas utilizadas en el simulador</h2>
+  <p class="nota">Son las ecuaciones que se implementan en <code>script.js</code> (se indica la función donde está cada una). Los ángulos θ se miden desde la vertical hacia abajo; ω = dθ/dt y α = d²θ/dt².</p>
+
+  <div class="f-grid">
+    <article class="f-card">
+      <h3>1. Lagrangiano y energías</h3>
+      <p class="donde">Código: <code>energias()</code></p>
+      <div class="formula">L = T − V</div>
+      <div class="formula">d/dt(∂L/∂q̇ᵢ) − ∂L/∂qᵢ = 0, con q₁ = θ₁ y q₂ = θ₂</div>
+      <div class="formula">T = ½ m₁ L₁² ω₁² + ½ m₂ [ L₁² ω₁² + L₂² ω₂² + 2 L₁ L₂ ω₁ ω₂ cos(θ₁ − θ₂) ]</div>
+      <div class="formula">V = −(m₁ + m₂) g L₁ cos θ₁ − m₂ g L₂ cos θ₂</div>
+      <div class="formula">E = T + V</div>
+    </article>
+
+    <article class="f-card">
+      <h3>2. Ecuaciones de movimiento</h3>
+      <p class="donde">Código: <code>aceleraciones()</code></p>
+      <div class="formula">δ = θ₁ − θ₂ &nbsp;&nbsp; D = 2m₁ + m₂ − m₂ cos(2δ)</div>
+      <div class="formula">α₁ = [ −g(2m₁ + m₂) sin θ₁ − m₂ g sin(θ₁ − 2θ₂) − 2 sin δ · m₂ (ω₂² L₂ + ω₁² L₁ cos δ) ] / (L₁ · D)</div>
+      <div class="formula">α₂ = [ 2 sin δ · ( ω₁² L₁ (m₁ + m₂) + g (m₁ + m₂) cos θ₁ + ω₂² L₂ m₂ cos δ ) ] / (L₂ · D)</div>
+      <div class="formula">Amortiguamiento opcional: αᵢ ← αᵢ − b · ωᵢ</div>
+    </article>
+
+    <article class="f-card">
+      <h3>3. Posición, velocidad y aceleración de las masas</h3>
+      <p class="donde">Código: <code>cinematica()</code></p>
+      <div class="formula">x₁ = L₁ sin θ₁ &nbsp;&nbsp; y₁ = −L₁ cos θ₁<br>x₂ = x₁ + L₂ sin θ₂ &nbsp;&nbsp; y₂ = y₁ − L₂ cos θ₂</div>
+      <div class="formula">ẋ₁ = L₁ ω₁ cos θ₁ &nbsp;&nbsp; ẏ₁ = L₁ ω₁ sin θ₁<br>ẋ₂ = ẋ₁ + L₂ ω₂ cos θ₂ &nbsp;&nbsp; ẏ₂ = ẏ₁ + L₂ ω₂ sin θ₂<br>v = √(ẋ² + ẏ²)</div>
+      <div class="formula">ẍ₁ = L₁ (α₁ cos θ₁ − ω₁² sin θ₁) &nbsp;&nbsp; ÿ₁ = L₁ (α₁ sin θ₁ + ω₁² cos θ₁)<br>ẍ₂ = ẍ₁ + L₂ (α₂ cos θ₂ − ω₂² sin θ₂) &nbsp;&nbsp; ÿ₂ = ÿ₁ + L₂ (α₂ sin θ₂ + ω₂² cos θ₂)<br>a = √(ẍ² + ÿ²)</div>
+    </article>
+
+    <article class="f-card">
+      <h3>4. Integración numérica: Runge-Kutta de 4.º orden</h3>
+      <p class="donde">Código: <code>rk4()</code> · paso h = dt = 0,001 s</p>
+      <div class="formula">Estado: y = (θ₁, θ₂, ω₁, ω₂) &nbsp;&nbsp; y′ = f(y) = (ω₁, ω₂, α₁, α₂)</div>
+      <div class="formula">k₁ = f(yₙ)<br>k₂ = f(yₙ + h·k₁/2)<br>k₃ = f(yₙ + h·k₂/2)<br>k₄ = f(yₙ + h·k₃)</div>
+      <div class="formula">yₙ₊₁ = yₙ + (h/6)(k₁ + 2k₂ + 2k₃ + k₄)</div>
+    </article>
+
+    <article class="f-card">
+      <h3>5. Resultados derivados</h3>
+      <p class="donde">Código: <code>separacion()</code> y <code>deriva()</code></p>
+      <div class="formula">Separación A–B: d = √[ (x₂,A − x₂,B)² + (y₂,A − y₂,B)² ]</div>
+      <div class="formula">Criterio de caos: d &gt; 0,5 m</div>
+      <div class="formula">Deriva de energía (%) = (E − E₀) / (E₀ − E<sub>mín</sub>) × 100<br>E<sub>mín</sub> = −(m₁ + m₂) g L₁ − m₂ g L₂</div>
+    </article>
+
+    <article class="f-card">
+      <h3>6. Validación científica</h3>
+      <p class="donde">Código: <code>pruebaEnergia()</code>, <code>pruebaModo()</code></p>
+      <div class="formula">Oscilaciones pequeñas (m₁ = m₂, L₁ = L₂ = L):<br>ω² = (g/L)(2 ± √2)</div>
+      <div class="formula">Condición inicial del modo: θ₂ = θ₁ · 2(1 − λ)/λ, con λ = 2 ± √2</div>
+      <div class="formula">Periodo medido: T = 2 (t<sub>último</sub> − t<sub>primero</sub>) / (n − 1) &nbsp;&nbsp; ω<sub>sim</sub> = 2π / T</div>
+      <div class="formula">Error (%) = |ω<sub>sim</sub> − ω<sub>teórico</sub>| / ω<sub>teórico</sub> × 100</div>
+    </article>
+  </div>
+
+  <h3>Evaluación en vivo de las ecuaciones (péndulo A)</h3>
+  <p class="nota">Estos valores salen de las fórmulas 2 con los datos actuales del simulador. Cambian mientras se mueve el péndulo.</p>
+  <dl class="resultados">
+    <div><dt>δ = θ₁ − θ₂</dt><dd><span id="out-delta">0.00</span> rad</dd></div>
+    <div><dt>D = 2m₁ + m₂ − m₂ cos(2δ)</dt><dd><span id="out-D">0.000</span> kg</dd></div>
+    <div><dt>α₁ (aceleración angular 1)</dt><dd><span id="out-al1">0.00</span> rad/s²</dd></div>
+    <div><dt>α₂ (aceleración angular 2)</dt><dd><span id="out-al2">0.00</span> rad/s²</dd></div>
+  </dl>
+
+  <h3>Significado de los símbolos</h3>
+  <div class="tabla-scroll">
+    <table>
+      <thead><tr><th>Símbolo</th><th>Significado</th><th>Unidad</th></tr></thead>
+      <tbody>
+        <tr><td>m₁, m₂</td><td>Masas de los péndulos</td><td>kg</td></tr>
+        <tr><td>L₁, L₂</td><td>Longitudes de las barras</td><td>m</td></tr>
+        <tr><td>θ₁, θ₂</td><td>Ángulos respecto a la vertical (se escriben en grados y se convierten a radianes)</td><td>rad</td></tr>
+        <tr><td>ω₁, ω₂</td><td>Velocidades angulares</td><td>rad/s</td></tr>
+        <tr><td>α₁, α₂</td><td>Aceleraciones angulares</td><td>rad/s²</td></tr>
+        <tr><td>g</td><td>Aceleración de la gravedad</td><td>m/s²</td></tr>
+        <tr><td>b</td><td>Coeficiente de amortiguamiento (opcional)</td><td>1/s</td></tr>
+        <tr><td>T, V, E</td><td>Energía cinética, potencial y mecánica</td><td>J</td></tr>
+        <tr><td>x, y, v, a</td><td>Posición, velocidad y aceleración lineales de cada masa</td><td>m, m/s, m/s²</td></tr>
+        <tr><td>h (dt)</td><td>Paso de integración</td><td>s</td></tr>
+        <tr><td>d</td><td>Distancia entre las masas 2 de los péndulos A y B</td><td>m</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ ACERCA DEL MODELO ============ -->
+<footer class="modelo">
+  <h2>Acerca del modelo</h2>
+  <p><strong>Ecuaciones:</strong> L = T − V; Euler-Lagrange: d/dt(∂L/∂q̇ᵢ) − ∂L/∂qᵢ = 0; E = T + V. Se integran con Runge-Kutta de 4.º orden (dt = 0,001 s).</p>
+  <p><strong>Supuestos:</strong> sistema plano, barras rígidas sin masa, masas puntuales, g constante y sin fricción (salvo que actives el amortiguamiento).</p>
+  <p><strong>Límites:</strong> no representa péndulos con masa distribuida ni resistencia del aire real. Ángulos medidos desde la vertical hacia abajo.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
